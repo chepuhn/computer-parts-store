@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин компьютерных комплектующих</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="app">
+            <!-- Header -->
+            <div class="header">
+                <div class="logo">
+                    <i class="fas fa-desktop"></i>
+                    <h1>Computer Parts Store</h1>
+                </div>
+                <button class="cart-btn" onclick="showCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Корзина</span>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </div>
+
+            <!-- Navigation -->
+            <div class="nav">
+                <div class="nav-item active" onclick="showCategories()">
+                    <i class="fas fa-th-large"></i>
+                    <span>Категории</span>
+                </div>
+                <div class="nav-item" onclick="showProducts()">
+                    <i class="fas fa-microchip"></i>
+                    <span>Все товары</span>
+                </div>
+                <div class="nav-item" onclick="showSearch()">
+                    <i class="fas fa-search"></i>
+                    <span>Поиск</span>
+                </div>
+                <div class="nav-item" onclick="showCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Корзина</span>
+                </div>
+                <div class="nav-item" onclick="showOrders()">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Заказы</span>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content" id="mainContent">
+                <!-- Loading -->
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Загрузка каталога...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Telegram Web App initialization
+        let tg = window.Telegram.WebApp;
+        let isTelegram = false;
+
+        if (window.Telegram && window.Telegram.WebApp) {
+            isTelegram = true;
+            tg.expand();
+            tg.BackButton.hide();
+            tg.MainButton.hide();
+
+            // Handle back button
+            tg.BackButton.onClick(() => {
+                if (state.currentView === 'productDetails') {
+                    showProducts(state.currentProduct?.category);
+                } else {
+                    showCategories();
+                }
+            });
+        }
+
+        // State management
+        let state = {
+            currentView: 'categories',
+            categories: [],
+            products: [],
+            cart: [],
+            orders: [],
+            currentCategory: null,
+            currentProduct: null,
+            searchQuery: ''
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCategories();
+            if (isTelegram) {
+                sendDataToBot('get_categories');
+            }
+        });
+
+        // Navigation functions
+        function showCategories() {
+            state.currentView = 'categories';
+            updateNav('categories');
+            renderCategories();
+            if (isTelegram) {
+                tg.BackButton.hide();
+            }
+        }
+
+        function showProducts(category = null) {
+            state.currentView = 'products';
+            state.currentCategory = category;
+            updateNav('products');
+            renderProducts();
+            if (isTelegram) {
+                tg.BackButton.show();
+            }
+        }
+
+        function showSearch() {
+            state.currentView = 'search';
+            updateNav('search');
+            renderSearch();
+            if (isTelegram) {
+                tg.BackButton.hide();
+            }
+        }
+
+        function showCart() {
+            state.currentView = 'cart';
+            updateNav('cart');
+            renderCart();
+            if (isTelegram) {
+                tg.BackButton.show();
+            }
+        }
+
+        function showOrders() {
+            state.currentView = 'orders';
+            updateNav('orders');
+            renderOrders();
+            if (isTelegram) {
+                tg.BackButton.show();
+            }
+        }
+
+        function showProductDetails(product) {
+            state.currentView = 'productDetails';
+            state.currentProduct = product;
+            renderProductDetails();
+            if (isTelegram) {
+                tg.BackButton.show();
+            }
+        }
+
+        function showCheckout() {
+            state.currentView = 'checkout';
+            renderCheckout();
+            if (isTelegram) {
+                tg.BackButton.show();
+            }
+        }
+
+        // Update navigation
+        function updateNav(activeItem) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            if (activeItem !== 'productDetails' && activeItem !== 'checkout') {
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    if (item.textContent.includes(getNavText(activeItem))) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+        }
+
+        function getNavText(view) {
+            const map = {
+                'categories': 'Категории',
+                'products': 'Все товары',
+                'search': 'Поиск',
+                'cart': 'Корзина',
+                'orders': 'Заказы'
+            };
+            return map[view] || '';
+        }
+
+        // Data loading
+        async function loadCategories() {
+            try {
+                // Sample categories data
+                state.categories = [
+                    { id: 'cpu', name: 'Процессоры', description: 'Центральные процессоры (CPU)', icon: '⚡', slug: 'cpu' },
+                    { id: 'gpu', name: 'Видеокарты', description: 'Графические процессоры (GPU)', icon: '🎮', slug: 'gpu' },
+                    { id: 'motherboards', name: 'Материнские платы', description: 'Системные платы', icon: '🖥️', slug: 'motherboards' },
+                    { id: 'ram', name: 'Оперативная память', description: 'Модули RAM', icon: '💾', slug: 'ram' },
+                    { id: 'storage', name: 'Накопители', description: 'SSD и HDD накопители', icon: '💿', slug: 'storage' },
+                    { id: 'psu', name: 'Блоки питания', description: 'Источники питания (PSU)', icon: '🔌', slug: 'psu' },
+                    { id: 'cases', name: 'Корпуса', description: 'Корпуса для ПК', icon: '📦', slug: 'cases' },
+                    { id: 'cooling', name: 'Охлаждение', description: 'Системы охлаждения', icon: '❄️', slug: 'cooling' },
+                    { id: 'monitors', name: 'Мониторы', description: 'Мониторы и дисплеи', icon: '🖥️', slug: 'monitors' },
+                    { id: 'keyboards', name: 'Клавиатуры', description: 'Механические и мембранные', icon: '⌨️', slug: 'keyboards' }
+                ];
+
+                // Sample products data
+                await loadProducts();
+
+                renderCategories();
+            } catch (error) {
+                console.error('Error loading categories:', error);
+                showError('Ошибка загрузки категорий');
+            }
+        }
+
+        async function loadProducts() {
+            try {
+                // Sample products data
+                state.products = [
+                    {
+                        id: 1,
+                        name: 'AMD Ryzen 5 7600X',
+                        description: '6-ядерный процессор для игр и работы',
+                        price: 24999,
+                        category: 'cpu',
+                        brand: 'AMD',
+                        specs: 'Сокет: AM5 | Ядра: 6 | Потоки: 12 | Частота: 4.7-5.3 ГГц | Кэш L3: 32 МБ',
+                        rating: 4.8,
+                        inStock: true,
+                        stock: 15
+                    },
+                    {
+                        id: 2,
+                        name: 'Intel Core i5-13400F',
+                        description: 'Процессор для офиса и игр',
+                        price: 19850,
+                        category: 'cpu',
+                        brand: 'Intel',
+                        specs: 'Сокет: LGA1700 | Ядра: 10 (6P+4E) | Потоки: 16 | Частота: 2.5-4.6 ГГц',
+                        rating: 4.6,
+                        inStock: true,
+                        stock: 8
+                    },
+                    {
+                        id: 3,
+                        name: 'ASUS TUF RTX 4060 Ti',
+                        description: 'Игровая видеокарта для Full HD/2K игр',
+                        price: 48990,
+                        category: 'gpu',
+                        brand: 'ASUS',
+                        specs: 'Память: 8 ГБ GDDR6 | Частота: 2310 МГц | Разъемы: 3xDP, 1xHDMI',
+                        rating: 4.7,
+                        inStock: true,
+                        stock: 12
+                    },
+                    {
+                        id: 4,
+                        name: 'Kingston FURY Beast 32GB',
+                        description: 'Оперативная память DDR5 для игровых систем',
+                        price: 7850,
+                        category: 'ram',
+                        brand: 'Kingston',
+                        specs: 'Объем: 32 ГБ (2x16) | Частота: 6000 МГц | Тайминги: CL36',
+                        rating: 4.7,
+                        inStock: true,
+                        stock: 25
+                    },
+                    {
+                        id: 5,
+                        name: 'Samsung 980 Pro 1TB',
+                        description: 'NVMe SSD накопитель PCIe 4.0',
+                        price: 9990,
+                        category: 'storage',
+                        brand: 'Samsung',
+                        specs: 'Форм-фактор: M.2 2280 | Интерфейс: PCIe 4.0 | Скорость чтения: 7000 МБ/с',
+                        rating: 4.9,
+                        inStock: true,
+                        stock: 20
+                    }
+                ];
+            } catch (error) {
+                console.error('Error loading products:', error);
+                showError('Ошибка загрузки товаров');
+            }
+        }
+
+        // Render functions
+        function renderCategories() {
+            const content = `
+                <div class="search-container">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Поиск товаров..."
+                               oninput="handleSearch(event)" value="${state.searchQuery}">
+                    </div>
+                </div>
+                <h2>Выберите категорию</h2>
+                <div class="categories-grid">
+                    ${state.categories.map(category => `
+                        <div class="category-card" onclick="showProducts('${category.slug}')">
+                            <div class="category-icon">${category.icon}</div>
+                            <div class="category-name">${category.name}</div>
+                            <div class="category-desc">${category.description}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="featured-section">
+                    <h3>Популярные товары</h3>
+                    <div class="products-grid">
+                        ${state.products.slice(0, 4).map(product => `
+                            <div class="product-card" onclick="showProductDetails(${product.id})">
+                                <div class="product-image">
+                                    <i class="fas fa-microchip"></i>
+                                </div>
+                                ${product.inStock ? '<div class="product-badge in-stock">В наличии</div>' : '<div class="product-badge out-of-stock">Под заказ</div>'}
+                                <div class="product-info">
+                                    <div class="product-header">
+                                        <div class="product-name">${product.name}</div>
+                                        <div class="product-price">${product.price.toLocaleString()}₽</div>
+                                    </div>
+                                    <div class="product-brand">
+                                        <i class="fas fa-tag"></i> ${product.brand}
+                                    </div>
+                                    <div class="product-specs">${product.specs}</div>
+                                    <div class="product-footer">
+                                        <div class="product-rating">
+                                            <div class="rating-stars">
+                                                ${getStars(product.rating)}
+                                            </div>
+                                            <span>${product.rating}</span>
+                                        </div>
+                                        <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(${product.id})">
+                                            <i class="fas fa-cart-plus"></i>
+                                            В корзину
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('mainContent').innerHTML = content;
+            hideLoading();
+        }
+
+        function renderProducts() {
+            let filteredProducts = state.products;
+
+            if (state.currentCategory) {
+                filteredProducts = state.products.filter(p => p.category === state.currentCategory);
+                const category = state.categories.find(c => c.slug === state.currentCategory);
+            }
+
+            const content = `
+                <button class="back-btn" onclick="showCategories()">
+                    <i class="fas fa-arrow-left"></i>
+                    Назад к категориям
+                </button>
+                <h2>
+                    ${state.currentCategory ? state.categories.find(c => c.slug === state.currentCategory).name : 'Все товары'}
+                </h2>
+                <div class="search-container">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Поиск в категории..."
+                               oninput="handleProductSearch(event)" value="${state.searchQuery}">
+                    </div>
+                </div>
+                ${filteredProducts.length > 0 ? `
+                    <div class="products-grid">
+                        ${filteredProducts.map(product => `
+                            <div class="product-card" onclick="showProductDetails(${product.id})">
+                                <div class="product-image">
+                                    <i class="fas fa-microchip"></i>
+                                </div>
+                                ${product.inStock ? '<div class="product-badge in-stock">В наличии</div>' : '<div class="product-badge out-of-stock">Под заказ</div>'}
+                                <div class="product-info">
+                                    <div class="product-header">
+                                        <div class="product-name">${product.name}</div>
+                                        <div class="product-price">${product.price.toLocaleString()}₽</div>
+                                    </div>
+                                    <div class="product-brand">
+                                        <i class="fas fa-tag"></i> ${product.brand}
+                                    </div>
+                                    <div class="product-specs">${product.specs}</div>
+                                    <div class="product-footer">
+                                        <div class="product-rating">
+                                            <div class="rating-stars">
+                                                ${getStars(product.rating)}
+                                            </div>
+                                            <span>${product.rating}</span>
+                                        </div>
+                                        <button class="add-to-cart-btn" ${!product.inStock ? 'disabled' : ''}
+                                                onclick="event.stopPropagation(); addToCart(${product.id})">
+                                            <i class="fas fa-cart-plus"></i>
+                                            ${product.inStock ? 'В корзину' : 'Нет в наличии'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : `
+                    <div class="empty-state">
+                        <i class="fas fa-box-open"></i>
+                        <h3>Товаров не найдено</h3>
+                        <p>Попробуйте изменить параметры поиска или выбрать другую категорию</p>
+                    </div>
+                `}
+            `;
+
+            document.getElementById('mainContent').innerHTML = content;
+            hideLoading();
+        }
+
+        function renderProductDetails() {
+            const product = getProductById(state.currentProduct);
+            if (!product) {
+                showError('Товар не найден');
+                showCategories();
+                return;
+            }
+
+            const content = `
+                <div class="product-details">
+                    <button class="back-btn" onclick="showProducts('${product.category}')">
+                        <i class="fas fa-arrow-left"></i>
+                        Назад к категории
+                    </button>
+
+                    <div class="details-grid">
+                        <div class="details-image">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+
+                        <div class="details-info">
+                            <h2>${product.name}</h2>
+                            <div class="details-price">${product.price.toLocaleString()}₽</div>
+
+                            <div class="details-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-tag"></i>
+                                    <span>Бренд: ${product.brand}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-box"></i>
+                                    <span>Наличие: ${product.inStock ? '✅ В наличии' : '⏳ Под заказ (3-5 дней)'}</span>
+                                </div>
+                                ${product.stock ? `
+                                <div class="meta-item">
+                                    <i class="fas fa-cubes"></i>
+                                    <span>Остаток: ${product.stock} шт.</span>
+                                </div>
+                                ` : ''}
+                                <div class="meta-item">
+                                    <i class="fas fa-star"></i>
+                                    <span>Рейтинг: ${getStars(product.rating)} ${product.rating}/5</span>
+                                </div>
+                            </div>
+
+                            <div class="details-description">
+                                <h3>Описание</h3>
+                                <p>${product.description}</p>
+                            </div>
+
+                            <div class="details-specs">
+                                <h3>Характеристики</h3>
+                                <ul>
+                                    ${product.specs.split('|').map(spec => `
+                                        <li>${spec.trim()}</li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+
+                            <div class="details-actions">
+                                <button class="add-to-cart-btn big" onclick="addToCart(${product.id})" ${!product.inStock ? 'disabled' : ''}>
+                                    <i class="fas fa-cart-plus"></i>
+                                    ${product.inStock ? 'Добавить в корзину' : 'Нет в наличии'}
+                                </button>
+                                <button class="buy-now-btn" onclick="buyNow(${product.id})" ${!product.inStock ? 'disabled' : ''}>
+                                    <i class="fas fa-bolt"></i>
+                                    Купить сейчас
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('mainContent').innerHTML = content;
+            hideLoading();
+        }
+
+        function renderCart() {
+            const content = `
+                <button class="back-btn" onclick="showCategories()">
+                    <i class="fas fa-arrow-left"></i>
+                    Назад в магазин
+                </button>
+                <h2>Корзина</h2>
+                ${state.cart.length > 0 ? `
+                    <div class="cart-container">
+                        <div class="cart-items">
+                            ${state.cart.map((item, index) => {
+                                const product = getProductById(item.productId);
+                                return `
+                                    <div class="cart-item">
+                                        <div class="cart-item-image">
+                                            <i class="fas fa-microchip"></i>
+                                        </div>
+                                        <div class="cart-item-info">
+                                            <div class="cart-item-name">${product.name}</div>
+                                            <div class="cart-item-price">${product.price.toLocaleString()}₽ × ${item.quantity} = ${(product.price * item.quantity).toLocaleString()}₽</div>
+                                        </div>
+                                        <div class="cart-item-actions">
+                                            <div class="quantity-control">
+                                                <button class="quantity-btn" onclick="updateQuantity(${index}, ${item.quantity - 1})" ${item.quantity <= 1 ? 'disabled' : ''}>
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                                <span class="quantity">${item.quantity}</span>
+                                                <button class="quantity-btn" onclick="updateQuantity(${index}, ${item.quantity + 1})">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                            <button class="remove-btn" onclick="removeFromCart(${index})">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+
+                        <div class="cart-total">
+                            <div class="total-row">
+                                <span>Итого:</span>
+                                <span class="total-price">${getCartTotal().toLocaleString()}₽</span>
+                            </div>
+                        </div>
+
+                        <div class="cart-actions">
+                            <button class="clear-cart-btn" onclick="clearCart()">
+                                <i class="fas fa-trash"></i>
+                                Очистить корзину
+                            </button>
+                            <button class="checkout-btn" onclick="showCheckout()">
+                                <i class="fas fa-shopping-bag"></i>
+                                Оформить заказ
+                            </button>
+                        </div>
+                    </div>
+                ` : `
+                    <div class="empty-state">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3>Корзина пуста</h3>
+                        <p>Добавьте товары из каталога</p>
+                        <button class="primary-btn" onclick="showCategories()">
+                            <i class="fas fa-shopping-bag"></i>
+                            Перейти к покупкам
+                        </button>
+                    </div>
+                `}
+            `;
+
+            document.getElementById('mainContent').innerHTML = content;
+            hideLoading();
+            updateCartCount();
+        }
+
+        function renderCheckout() {
+            const content = `
+                <button class="back-btn" onclick="showCart()">
+                    <i class="fas fa-arrow-left"></i>
+                    Назад в корзину
+                </button>
+                <h2>Оформление заказа</h2>
+
+                <div class="checkout-container">
+                    <form id="checkoutForm" onsubmit="submitOrder(event)">
+                        <div class="form-group">
+                            <label for="name">Имя *</label>
+                            <input type="text" id="name" required placeholder="Введите ваше имя">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Телефон *</label>
+                            <input type="tel" id="phone" required placeholder="+7 (999) 123-45-67">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Адрес доставки *</label>
+                            <textarea id="address" required placeholder="Введите адрес доставки" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes">Примечания к заказу</label>
+                            <textarea id="notes" placeholder="Комментарии к заказу, особенности доставки и т.д." rows="3"></textarea>
+                        </div>
+
+                        <div class="order-summary">
+                            <h3>Состав заказа</h3>
+                            ${state.cart.map((item, index) => {
+                                const product = getProductById(item.productId);
+                                return `
+                                    <div class="order-item">
+                                        <span>${product.name} x${item.quantity}</span>
+                                        <span>${(product.price * item.quantity).toLocaleString()}₽</span>
+                                    </div>
+                                `;
+                            }).join('')}
+                            <div class="order-total">
+                                <span>Итого:</span>
+                                <span>${getCartTotal().toLocaleString()}₽</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-order-btn">
+                            <i class="fas fa-check"></i>
+                            Подтвердить заказ
+                        </button>
+                    </form>
+                </div>
+            `;
+
+            document.getElementById('mainContent').innerHTML = content;
+            hideLoading();
+        }
+
+        function renderOrders() {
+            // Sample orders data
+            state.orders = [
+                {
+                    id: 1001,
+                    products: 'AMD Ryzen 5 7600X, Kingston FURY Beast 32GB',
+                    total: 32849,
+                    date: '15.11.2023',
+                    status: 'delivered'
+                },
+                {
+                    id: 1002,
+                    products: 'ASUS TUF RTX 4060 Ti',
+                    total: 48990,
+                    date: '10.11.2023',
+                    status: 'processing'
+                }
+            ];
+
+            const content = `
+                <h2>Мои заказы</h2>
+                ${state.orders.length > 0 ? `
+                    <div class="orders-container">
+                        ${state.orders.map(order => `
+                            <div class="order-card">
+                                <div class="order-header">
+                                    <span class="order-id">Заказ #${order.id}</span>
+                                    <span class="order-status ${order.status}">
+                                        ${getStatusText(order.status)}
+                                    </span>
+                                </div>
+                                <div class="order-body">
+                                    <p><strong>Товары:</strong> ${order.products}</p>
+                                    <p><strong>Дата:</strong> ${order.date}</p>
+                                </div>
+                                <div class="order-footer">
+                                    <span class="order-total">Итого: ${order.total.toLocaleString()}₽</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3>Заказов пока нет</h3>
+                        <p>Сделайте свой первый заказ!</p>
+                        <button class="primary-btn" onclick="showCategories()">
+                            <i class="fas fa-shopping-bag"></i>
+                            Перейти к покупкам
+                        </button>
+                    </div>
+                `}
+            `;
+
+            document.getElementById('mainContent').innerHTML = content;
+            hideLoading();
+        }
+
+        function renderSearch() {
+            const content = `
+                <h2>Поиск товаров</h2>
+                <div class="search-container">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Введите название товара или бренда..."
+                               oninput="handleSearch(event)" value="${state.searchQuery}">
+                    </div>
+                </div>
+                ${state.searchQuery ? `
+                    <div class="search-results">
+                        <h3>Результаты поиска: "${state.searchQuery}"</h3>
+                        ${getSearchResults().length > 0 ? `
+                            <div class="products-grid">
+                                ${getSearchResults().map(product => `
+                                    <div class="product-card" onclick="showProductDetails(${product.id})">
+                                        <div class="product-image">
+                                            <i class="fas fa-microchip"></i>
+                                        </div>
+                                        ${product.inStock ? '<div class="product-badge in-stock">В наличии</div>' : ''}
+                                        <div class="product-info">
+                                            <div class="product-header">
+                                                <div class="product-name">${product.name}</div>
+                                                <div class="product-price">${product.price.toLocaleString()}₽</div>
+                                            </div>
+                                            <div class="product-brand">
+                                                <i class="fas fa-tag"></i> ${product.brand}
+                                            </div>
+                                            <div class="product-specs">${product.specs}</div>
+                                            <div class="product-footer">
+                                                <div class="product-rating">
+                                                    <div class="rating-stars">
+                                                        ${getStars(product.rating)}
+                                                    </div>
+                                                    <span>${product.rating}</span>
+                                                </div>
+                                                <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(${product.id})">
+                                                    <i class="fas fa-cart-plus"></i>
+                                                    В корзину
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : `
+                            <div class="empty-state">
+                                <i class="fas fa-search"></i>
+                                <h3>Ничего не найдено</h3>
+                                <p>Попробуйте изменить запрос</p>
+                            </div>
+                        `}
+                    </div>
+                ` : `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>Начните поиск</h3>
+                        <p>Введите название товара, бренда или характеристики</p>
+                    </div>
+                `}
+            `;
+
+            document.getElementById('mainContent').innerHTML = content;
+            hideLoading();
+        }
+
+        // Cart functions
+        function addToCart(productId) {
+            const existingItem = state.cart.find(item => item.productId === productId);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                state.cart.push({
+                    productId: productId,
+                    quantity: 1,
+                    addedAt: new Date().toISOString()
+                });
+            }
+
+            updateCartCount();
+            showMessage('Товар добавлен в корзину!', 'success');
+
+            // Send data to bot
+            if (isTelegram) {
+                sendDataToBot('add_to_cart', { product_id: productId });
+            }
+        }
+
+        function updateQuantity(index, newQuantity) {
+            if (newQuantity < 1) {
+                removeFromCart(index);
+                return;
+            }
+
+            state.cart[index].quantity = newQuantity;
+            renderCart();
+        }
+
+        function removeFromCart(index) {
+            state.cart.splice(index, 1);
+            renderCart();
+            showMessage('Товар удален из корзины', 'info');
+        }
+
+        function clearCart() {
+            if (confirm('Вы уверены, что хотите очистить корзину?')) {
+                state.cart = [];
+                renderCart();
+                showMessage('Корзина очищена', 'info');
+            }
+        }
+
+        function getCartTotal() {
+            return state.cart.reduce((total, item) => {
+                const product = getProductById(item.productId);
+                return total + (product.price * item.quantity);
+            }, 0);
+        }
+
+        function updateCartCount() {
+            const totalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = totalItems;
+        }
+
+        // Order functions
+        function submitOrder(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+            const notes = document.getElementById('notes').value;
+
+            // Prepare order data
+            const orderData = {
+                items: state.cart.map(item => ({
+                    productId: item.productId,
+                    name: getProductById(item.productId).name,
+                    quantity: item.quantity,
+                    price: getProductById(item.productId).price
+                })),
+                total: getCartTotal(),
+                address: address,
+                phone: phone,
+                notes: notes
+            };
+
+            // Send order to bot
+            if (isTelegram) {
+                sendDataToBot('create_order', orderData);
+            }
+
+            // Create local order record
+            const orderId = Date.now();
+            const productsList = state.cart.map(item => {
+                const product = getProductById(item.productId);
+                return `${product.name} x${item.quantity}`;
+            }).join(', ');
+
+            state.orders.unshift({
+                id: orderId,
+                products: productsList,
+                total: getCartTotal(),
+                date: new Date().toLocaleDateString('ru-RU'),
+                status: 'pending'
+            });
+
+            // Clear cart
+            state.cart = [];
+            updateCartCount();
+
+            // Show success message
+            showMessage(`Заказ #${orderId} успешно оформлен! Менеджер свяжется с вами для подтверждения.`, 'success');
+
+            // Show orders
+            setTimeout(() => showOrders(), 2000);
+        }
+
+        function buyNow(productId) {
+            // Clear cart and add single product
+            state.cart = [{
+                productId: productId,
+                quantity: 1,
+                addedAt: new Date().toISOString()
+            }];
+
+            // Proceed to checkout
+            showCheckout();
+        }
+
+        // Search functions
+        function handleSearch(event) {
+            state.searchQuery = event.target.value.toLowerCase();
+
+            if (state.currentView === 'search') {
+                renderSearch();
+            } else if (state.currentView === 'categories') {
+                renderCategories();
+            }
+        }
+
+        function handleProductSearch(event) {
+            state.searchQuery = event.target.value.toLowerCase();
+            renderProducts();
+        }
+
+        function getSearchResults() {
+            if (!state.searchQuery) return [];
+
+            return state.products.filter(product =>
+                product.name.toLowerCase().includes(state.searchQuery) ||
+                product.brand.toLowerCase().includes(state.searchQuery) ||
+                product.description.toLowerCase().includes(state.searchQuery) ||
+                product.specs.toLowerCase().includes(state.searchQuery)
+            );
+        }
+
+        // Utility functions
+        function getProductById(id) {
+            return state.products.find(p => p.id === id) || state.products[0];
+        }
+
+        function getStars(rating) {
+            let stars = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating - fullStars >= 0.5;
+
+            for (let i = 0; i < fullStars; i++) {
+                stars += '⭐';
+            }
+
+            if (hasHalfStar) {
+                stars += '½';
+            }
+
+            return stars;
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': 'Ожидает обработки',
+                'processing': 'В обработке',
+                'shipped': 'Отправлен',
+                'delivered': 'Доставлен',
+                'cancelled': 'Отменен'
+            };
+            return statusMap[status] || status;
+        }
+
+        // UI helper functions
+        function showMessage(text, type = 'info') {
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${text}</span>
+            `;
+
+            document.getElementById('mainContent').prepend(message);
+
+            setTimeout(() => {
+                message.remove();
+            }, 5000);
+        }
+
+        function showError(text) {
+            showMessage(text, 'error');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Telegram bot communication
+        function sendDataToBot(action, data = {}) {
+            try {
+                const messageData = {
+                    action: action,
+                    ...data
+                };
+
+                // Send data to Telegram bot
+                if (isTelegram) {
+                    tg.sendData(JSON.stringify(messageData));
+                } else {
+                    console.log('WebApp data to send:', messageData);
+                    // For testing without Telegram
+                    showMessage('Данные отправлены: ' + JSON.stringify(messageData).substring(0, 50) + '...', 'info');
+                }
+            } catch (error) {
+                console.error('Error sending data to bot:', error);
+            }
+        }
+    </script>
+</body>
+</html>
