@@ -13,21 +13,22 @@
         
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: #f5f7fa;
         }
         
         .container {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 10px;
+            padding: 15px;
         }
         
         header {
             background-color: #2c3e50;
             color: white;
-            padding: 15px 0;
+            padding: 20px 0;
             margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         .header-content {
@@ -36,23 +37,32 @@
             align-items: center;
         }
         
-        h1 {
+        .logo h1 {
             color: white;
             margin: 0;
+            font-size: 24px;
+        }
+        
+        .logo p {
+            color: #ecf0f1;
+            margin: 5px 0 0 0;
+            font-size: 14px;
         }
         
         nav ul {
             display: flex;
             list-style: none;
-            gap: 15px;
+            gap: 10px;
         }
         
         nav a {
             color: white;
             text-decoration: none;
-            padding: 8px 15px;
+            padding: 10px 20px;
             border-radius: 4px;
             background-color: #34495e;
+            transition: background-color 0.3s;
+            display: inline-block;
         }
         
         nav a:hover {
@@ -66,10 +76,17 @@
         .cart-count {
             background-color: #e74c3c;
             color: white;
-            padding: 2px 6px;
+            padding: 3px 8px;
             border-radius: 50%;
             font-size: 12px;
             margin-left: 5px;
+        }
+        
+        .page-title {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ecf0f1;
         }
         
         .catalog {
@@ -82,30 +99,54 @@
         .product-card {
             background-color: white;
             border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .product-category {
+            color: #3498db;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
         
         .product-name {
             font-weight: bold;
             margin: 10px 0;
+            font-size: 16px;
+            color: #2c3e50;
+        }
+        
+        .product-description {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.4;
         }
         
         .product-price {
             color: #e74c3c;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
-            margin: 10px 0;
+            margin: 15px 0;
         }
         
         .add-to-cart {
             background-color: #3498db;
             color: white;
             border: none;
-            padding: 10px;
+            padding: 12px;
             border-radius: 4px;
             cursor: pointer;
             width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s;
         }
         
         .add-to-cart:hover {
@@ -114,44 +155,166 @@
         
         .page {
             display: none;
+            animation: fadeIn 0.5s;
         }
         
         .page.active {
             display: block;
         }
         
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
         .cart-item {
             background-color: white;
-            padding: 15px;
-            margin-bottom: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
             border-radius: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         
         .cart-total {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: bold;
-            margin: 20px 0;
+            margin: 30px 0;
             text-align: right;
+            color: #2c3e50;
         }
         
         .checkout-btn {
             background-color: #27ae60;
             color: white;
             border: none;
-            padding: 15px;
+            padding: 18px;
             border-radius: 4px;
             cursor: pointer;
             width: 100%;
             font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .checkout-btn:hover {
+            background-color: #219653;
         }
         
         .empty-cart {
             text-align: center;
-            padding: 40px;
+            padding: 60px 20px;
             font-size: 18px;
+            color: #7f8c8d;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .back-to-shop {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 25px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .category-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .category-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .category-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .category-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .category-count {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .search-box {
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .orders-list {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .order-item {
+            padding: 15px;
+            border-bottom: 1px solid #ecf0f1;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .remove-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -159,11 +322,16 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <h1>Магазин Комплектующих ПК</h1>
+                <div class="logo">
+                    <h1>Комплектующие ПК</h1>
+                    <p>Computer Parts Store</p>
+                </div>
                 <nav>
                     <ul>
-                        <li><a href="#" class="nav-btn active" data-page="home">Товары</a></li>
+                        <li><a href="#" class="nav-btn active" data-page="home">Все товары</a></li>
+                        <li><a href="#" class="nav-btn" data-page="categories">Категории</a></li>
                         <li><a href="#" class="nav-btn" data-page="cart">Корзина <span id="cart-counter">0</span></a></li>
+                        <li><a href="#" class="nav-btn" data-page="orders">Заказы</a></li>
                     </ul>
                 </nav>
             </div>
@@ -173,17 +341,47 @@
     <div class="container">
         <!-- Страница товаров -->
         <div id="home-page" class="page active">
-            <h2>Каталог товаров</h2>
+            <h2 class="page-title">Каталог товаров</h2>
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Поиск товаров..." id="search-input">
+            </div>
             <div id="catalog" class="catalog">
                 <!-- Товары будут здесь -->
             </div>
         </div>
         
+        <!-- Страница категорий -->
+        <div id="categories-page" class="page">
+            <h2 class="page-title">Категории товаров</h2>
+            <div id="categories-list" class="catalog">
+                <!-- Категории будут здесь -->
+            </div>
+        </div>
+        
         <!-- Страница корзины -->
         <div id="cart-page" class="page">
-            <h2>Корзина</h2>
+            <h2 class="page-title">Ваша корзина</h2>
             <div id="cart-items">
                 <!-- Товары в корзине будут здесь -->
+            </div>
+        </div>
+        
+        <!-- Страница заказов -->
+        <div id="orders-page" class="page">
+            <h2 class="page-title">История заказов</h2>
+            <div class="orders-list">
+                <p>Здесь будут отображаться ваши заказы.</p>
+                <p>У вас пока нет завершенных заказов.</p>
+                <div style="margin-top: 20px; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
+                    <p><strong>Тестовая информация:</strong></p>
+                    <div class="order-item">
+                        <div>
+                            <div><strong>Заказ #001</strong></div>
+                            <div>Дата: 15.01.2024</div>
+                        </div>
+                        <div style="color: #27ae60; font-weight: bold;">15 000 ₽</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -191,14 +389,74 @@
     <script>
         // ========== ДАННЫЕ ТОВАРОВ ==========
         const products = [
-            { id: 1, name: "Видеокарта RTX 4080", price: 120000, category: "Видеокарты" },
-            { id: 2, name: "Процессор i9-13900K", price: 65000, category: "Процессоры" },
-            { id: 3, name: "Оперативная память 32GB", price: 15000, category: "Память" },
-            { id: 4, name: "SSD 2TB NVMe", price: 12000, category: "Накопители" },
-            { id: 5, name: "Материнская плата Z790", price: 25000, category: "Материнские платы" },
-            { id: 6, name: "Блок питания 850W", price: 11000, category: "Блоки питания" },
-            { id: 7, name: "Корпус ATX", price: 8000, category: "Корпуса" },
-            { id: 8, name: "Кулер для процессора", price: 5000, category: "Охлаждение" }
+            { 
+                id: 1, 
+                name: "Видеокарта NVIDIA RTX 4080", 
+                price: 120000, 
+                category: "Видеокарты",
+                description: "16GB GDDR6X, для игр 4K и рендеринга"
+            },
+            { 
+                id: 2, 
+                name: "Процессор Intel Core i9-13900K", 
+                price: 65000, 
+                category: "Процессоры",
+                description: "24 ядра, 32 потока, тактовая частота до 5.8 GHz"
+            },
+            { 
+                id: 3, 
+                name: "Оперативная память Kingston 32GB DDR5", 
+                price: 15000, 
+                category: "Оперативная память",
+                description: "DDR5 5200MHz, 2 модуля по 16GB"
+            },
+            { 
+                id: 4, 
+                name: "SSD накопитель Samsung 2TB NVMe", 
+                price: 12000, 
+                category: "Накопители",
+                description: "PCIe 4.0, скорость чтения до 7000 MB/s"
+            },
+            { 
+                id: 5, 
+                name: "Материнская плата ASUS Z790", 
+                price: 25000, 
+                category: "Материнские платы",
+                description: "Socket LGA1700, поддержка DDR5"
+            },
+            { 
+                id: 6, 
+                name: "Блок питания Deepcool 850W", 
+                price: 11000, 
+                category: "Блоки питания",
+                description: "80+ Gold, полностью модульный"
+            },
+            { 
+                id: 7, 
+                name: "Корпус NZXT H7 Flow", 
+                price: 8000, 
+                category: "Корпуса",
+                description: "ATX Mid-Tower, с прозрачной боковой панелью"
+            },
+            { 
+                id: 8, 
+                name: "Кулер для процессора Noctua NH-D15", 
+                price: 5000, 
+                category: "Охлаждение",
+                description: "Двойной башенный кулер, 2 вентилятора"
+            }
+        ];
+
+        // ========== КАТЕГОРИИ ==========
+        const categories = [
+            { id: 1, name: "Видеокарты", icon: "🎮", count: 8 },
+            { id: 2, name: "Процессоры", icon: "⚡", count: 6 },
+            { id: 3, name: "Материнские платы", icon: "🔌", count: 12 },
+            { id: 4, name: "Оперативная память", icon: "🧠", count: 15 },
+            { id: 5, name: "Накопители", icon: "💾", count: 20 },
+            { id: 6, name: "Блоки питания", icon: "🔋", count: 10 },
+            { id: 7, name: "Корпуса", icon: "📦", count: 18 },
+            { id: 8, name: "Охлаждение", icon: "❄️", count: 14 }
         ];
 
         // ========== КОРЗИНА ==========
@@ -207,14 +465,38 @@
         // ========== ПОКАЗАТЬ ТОВАРЫ ==========
         function showProducts() {
             const catalogElement = document.getElementById('catalog');
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            
+            let filteredProducts = products;
+            
+            if (searchTerm) {
+                filteredProducts = products.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm) ||
+                    product.category.toLowerCase().includes(searchTerm) ||
+                    product.description.toLowerCase().includes(searchTerm)
+                );
+            }
+            
             catalogElement.innerHTML = '';
             
-            products.forEach(product => {
+            if (filteredProducts.length === 0) {
+                catalogElement.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">🔍</div>
+                        <h3>Товары не найдены</h3>
+                        <p>Попробуйте изменить поисковый запрос</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredProducts.forEach(product => {
                 const productElement = document.createElement('div');
                 productElement.className = 'product-card';
                 productElement.innerHTML = `
+                    <div class="product-category">${product.category}</div>
                     <div class="product-name">${product.name}</div>
-                    <div>Категория: ${product.category}</div>
+                    <div class="product-description">${product.description}</div>
                     <div class="product-price">${product.price.toLocaleString()} ₽</div>
                     <button class="add-to-cart" data-id="${product.id}">
                         Добавить в корзину
@@ -229,6 +511,23 @@
                     const productId = parseInt(this.getAttribute('data-id'));
                     addToCart(productId);
                 });
+            });
+        }
+
+        // ========== ПОКАЗАТЬ КАТЕГОРИИ ==========
+        function showCategories() {
+            const categoriesElement = document.getElementById('categories-list');
+            categoriesElement.innerHTML = '';
+            
+            categories.forEach(category => {
+                const categoryElement = document.createElement('div');
+                categoryElement.className = 'category-card';
+                categoryElement.innerHTML = `
+                    <span class="category-icon">${category.icon}</span>
+                    <div class="category-name">${category.name}</div>
+                    <div class="category-count">${category.count} товаров</div>
+                `;
+                categoriesElement.appendChild(categoryElement);
             });
         }
 
@@ -252,7 +551,9 @@
             
             saveCart();
             updateCartCounter();
-            alert(`Товар "${product.name}" добавлен в корзину!`);
+            
+            // Показать уведомление
+            showNotification(`"${product.name}" добавлен в корзину!`);
         }
 
         // ========== ПОКАЗАТЬ КОРЗИНУ ==========
@@ -262,12 +563,12 @@
             if (cart.length === 0) {
                 cartItemsElement.innerHTML = `
                     <div class="empty-cart">
-                        Ваша корзина пуста
-                        <div style="margin-top: 20px;">
-                            <button onclick="showPage('home')" class="add-to-cart">
-                                Вернуться к покупкам
-                            </button>
-                        </div>
+                        <div style="font-size: 48px; margin-bottom: 20px;">🛒</div>
+                        <h3>Ваша корзина пуста</h3>
+                        <p>Добавьте товары из каталога</p>
+                        <a href="#" class="back-to-shop" onclick="showPage('home'); return false;">
+                            Перейти в каталог
+                        </a>
                     </div>
                 `;
                 return;
@@ -283,15 +584,18 @@
                 cartHTML += `
                     <div class="cart-item">
                         <div>
-                            <div style="font-weight: bold;">${item.name}</div>
-                            <div>${item.price.toLocaleString()} ₽ × ${item.quantity}</div>
+                            <div style="font-weight: bold; font-size: 16px;">${item.name}</div>
+                            <div style="margin-top: 5px; color: #7f8c8d;">${item.price.toLocaleString()} ₽ за шт.</div>
                         </div>
                         <div style="text-align: right;">
-                            <div style="font-weight: bold; color: #e74c3c;">${itemTotal.toLocaleString()} ₽</div>
-                            <div style="margin-top: 10px;">
-                                <button onclick="changeQuantity(${item.id}, -1)" style="padding: 5px 10px; margin-right: 5px;">-</button>
-                                <button onclick="changeQuantity(${item.id}, 1)" style="padding: 5px 10px; margin-right: 10px;">+</button>
-                                <button onclick="removeFromCart(${item.id})" style="padding: 5px 10px; background-color: #e74c3c; color: white; border: none; border-radius: 3px;">Удалить</button>
+                            <div style="font-weight: bold; color: #e74c3c; font-size: 18px; margin-bottom: 10px;">
+                                ${itemTotal.toLocaleString()} ₽
+                            </div>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" onclick="changeQuantity(${item.id}, -1)">-</button>
+                                <span style="font-weight: bold; min-width: 30px; text-align: center;">${item.quantity}</span>
+                                <button class="quantity-btn" onclick="changeQuantity(${item.id}, 1)">+</button>
+                                <button class="remove-btn" onclick="removeFromCart(${item.id})">Удалить</button>
                             </div>
                         </div>
                     </div>
@@ -341,18 +645,66 @@
         // ========== ОФОРМИТЬ ЗАКАЗ ==========
         function checkout() {
             if (cart.length === 0) {
-                alert('Корзина пуста!');
+                showNotification('Корзина пуста!');
                 return;
             }
             
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             
             if (confirm(`Оформить заказ на сумму ${total.toLocaleString()} ₽?`)) {
-                alert('Заказ оформлен! Спасибо за покупку!');
+                showNotification('Заказ успешно оформлен! Спасибо за покупку!');
                 cart = [];
                 saveCart();
                 updateCartCounter();
                 showPage('home');
+            }
+        }
+
+        // ========== ПОКАЗАТЬ УВЕДОМЛЕНИЕ ==========
+        function showNotification(message) {
+            // Удаляем старое уведомление если есть
+            const oldNotification = document.querySelector('.notification');
+            if (oldNotification) oldNotification.remove();
+            
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: #27ae60;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                animation: slideIn 0.3s ease forwards;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Автоматическое скрытие через 3 секунды
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+            
+            // Добавляем стили анимации если их еще нет
+            if (!document.getElementById('notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
             }
         }
 
@@ -369,6 +721,8 @@
 
         // ========== ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ ==========
         function showPage(pageName) {
+            console.log('Переход на страницу:', pageName);
+            
             // Скрыть все страницы
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
@@ -380,24 +734,41 @@
             });
             
             // Показать нужную страницу
-            document.getElementById(`${pageName}-page`).classList.add('active');
-            
-            // Активировать нужную кнопку
-            document.querySelector(`.nav-btn[data-page="${pageName}"]`).classList.add('active');
-            
-            // Загрузить контент страницы
-            if (pageName === 'home') {
-                showProducts();
-            } else if (pageName === 'cart') {
-                showCart();
+            const pageElement = document.getElementById(`${pageName}-page`);
+            if (pageElement) {
+                pageElement.classList.add('active');
+                
+                // Активировать нужную кнопку
+                document.querySelector(`.nav-btn[data-page="${pageName}"]`).classList.add('active');
+                
+                // Загрузить контент страницы
+                switch(pageName) {
+                    case 'home':
+                        showProducts();
+                        break;
+                    case 'categories':
+                        showCategories();
+                        break;
+                    case 'cart':
+                        showCart();
+                        break;
+                    case 'orders':
+                        // Страница заказов уже имеет статичный контент
+                        break;
+                }
+            } else {
+                console.error('Страница не найдена:', pageName);
             }
         }
 
         // ========== ИНИЦИАЛИЗАЦИЯ ==========
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Сайт загружен!');
+            console.log('=== ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ ===');
+            console.log('Товаров в базе:', products.length);
+            console.log('Категорий:', categories.length);
+            console.log('Товаров в корзине:', cart.length);
             
-            // Показать товары
+            // Показать товары по умолчанию
             showProducts();
             
             // Обновить счетчик корзины
@@ -412,15 +783,12 @@
                 });
             });
             
-            // Проверить, есть ли товары
-            if (products.length > 0) {
-                console.log('Товары загружены:', products.length);
-            } else {
-                console.error('Нет товаров!');
-            }
+            // Поиск товаров
+            document.getElementById('search-input').addEventListener('input', showProducts);
             
-            // Проверить корзину
-            console.log('Товаров в корзине:', cart.reduce((sum, item) => sum + item.quantity, 0));
+            // Тестовое сообщение
+            console.log('Приложение готово к работе!');
+            console.log('Нажмите на "Категории" чтобы проверить навигацию');
         });
     </script>
 </body>
