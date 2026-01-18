@@ -1,202 +1,49 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Магазин компьютерных комплектующих</title>
+    <title>Магазин - Тест</title>
     <style>
-        /* БАЗОВЫЕ СТИЛИ ПРЯМО ЗДЕСЬ */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f0f2f5; }
-
-        .app { max-width: 800px; margin: 20px auto; background: white; border-radius: 10px; padding: 20px; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { color: #2563eb; margin-bottom: 10px; }
-
-        .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-        .category-card { background: #f8fafc; padding: 20px; border-radius: 10px; text-align: center; cursor: pointer; border: 2px solid #e2e8f0; }
-        .category-card:hover { border-color: #2563eb; background: #eff6ff; }
-        .category-icon { font-size: 40px; margin-bottom: 10px; }
-
-        .loading { text-align: center; padding: 40px; color: #64748b; }
-        .spinner { border: 4px solid #e2e8f0; border-top: 4px solid #2563eb; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 20px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .error { background: #fee2e2; color: #dc2626; padding: 15px; border-radius: 8px; margin: 20px 0; }
-        .success { background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin: 20px 0; }
+        body { font-family: Arial; padding: 20px; }
+        .loading { color: blue; font-size: 20px; }
+        .loaded { color: green; font-size: 24px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="app">
-        <div class="header">
-            <h1>🖥️ Магазин компьютерных комплектующих</h1>
-            <p>Выберите категорию для просмотра товаров</p>
-        </div>
-
-        <div id="mainContent">
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p>Загрузка каталога...</p>
-            </div>
-        </div>
-
-        <div id="messageContainer"></div>
-    </div>
-
+    <h1>🖥️ Тест магазина</h1>
+    
+    <div id="status" class="loading">⏳ Загрузка...</div>
+    
+    <div id="content" style="margin-top: 20px;"></div>
+    
     <script>
-        // Telegram Web App initialization
-        let tg = window.Telegram?.WebApp;
-        let isTelegram = false;
-
-        if (tg) {
-            isTelegram = true;
-            console.log("✅ Telegram WebApp обнаружен");
-            tg.expand();
-            tg.BackButton.hide();
-        } else {
-            console.log("ℹ️ Открыто в браузере, не в Telegram");
+        console.log("🚀 Скрипт начал выполнение!");
+        
+        // Через 2 секунды меняем статус
+        setTimeout(function() {
+            document.getElementById('status').className = 'loaded';
+            document.getElementById('status').innerHTML = '✅ JavaScript работает!';
+            
+            document.getElementById('content').innerHTML = 
+                '<h3>Категории товаров:</h3>' +
+                '<ul>' +
+                '<li>⚡ Процессоры</li>' +
+                '<li>🎮 Видеокарты</li>' +
+                '<li>💾 Оперативная память</li>' +
+                '</ul>' +
+                '<button onclick="showMore()">Показать больше</button>';
+                
+            console.log("✅ Контент загружен!");
+        }, 2000);
+        
+        function showMore() {
+            alert('✅ Кнопка работает! Все системы в норме.');
         }
-
-        // Тестовые данные
-        const TEST_DATA = {
-            categories: [
-                { id: 'cpu', name: 'Процессоры', description: 'Центральные процессоры (CPU)', icon: '⚡', slug: 'cpu' },
-                { id: 'gpu', name: 'Видеокарты', description: 'Графические процессоры (GPU)', icon: '🎮', slug: 'gpu' },
-                { id: 'motherboards', name: 'Материнские платы', description: 'Системные платы', icon: '🖥️', slug: 'motherboards' },
-                { id: 'ram', name: 'Оперативная память', description: 'Модули RAM', icon: '💾', slug: 'ram' },
-                { id: 'storage', name: 'Накопители', description: 'SSD и HDD', icon: '💿', slug: 'storage' }
-            ],
-            products: [
-                { id: 1, name: 'AMD Ryzen 5 7600X', price: 24999, category: 'cpu', brand: 'AMD', rating: 4.8, inStock: true, specs: 'Сокет: AM5 | Ядра: 6' },
-                { id: 2, name: 'Intel Core i5-13400F', price: 19850, category: 'cpu', brand: 'Intel', rating: 4.6, inStock: true, specs: 'Сокет: LGA1700 | Ядра: 10' },
-                { id: 3, name: 'ASUS TUF RTX 4060 Ti', price: 48990, category: 'gpu', brand: 'ASUS', rating: 4.7, inStock: true, specs: 'Память: 8 ГБ GDDR6' }
-            ]
-        };
-
-        // State
-        let state = {
-            currentView: 'categories',
-            categories: [],
-            products: []
-        };
-
-        // Инициализация
+        
+        // Проверка при загрузке
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("🚀 Страница загружена");
-            loadCategories();
+            console.log("✅ DOM загружен!");
         });
-
-        // Функции
-        function loadCategories() {
-            console.log("📥 Загрузка категорий...");
-
-            // Используем тестовые данные
-            state.categories = TEST_DATA.categories;
-            state.products = TEST_DATA.products;
-
-            // Скрываем загрузку
-            document.getElementById('loading').style.display = 'none';
-
-            // Рендерим категории
-            renderCategories();
-
-            // Показываем сообщение
-            showMessage('✅ Данные успешно загружены!', 'success');
-
-            // Если в Telegram, отправляем запрос боту
-            if (isTelegram) {
-                console.log("📤 Отправляем запрос в Telegram бот...");
-                sendDataToBot('get_categories', { test: 'data' });
-            }
-        }
-
-        function renderCategories() {
-            console.log("🎨 Рендерим категории...");
-
-            const content = `
-                <h2 style="margin-bottom: 20px;">Категории товаров</h2>
-                <div class="categories-grid">
-                    ${state.categories.map(cat => `
-                        <div class="category-card" onclick="selectCategory('${cat.slug}')">
-                            <div class="category-icon">${cat.icon}</div>
-                            <h3>${cat.name}</h3>
-                            <p style="color: #64748b; font-size: 14px; margin-top: 5px;">${cat.description}</p>
-                        </div>
-                    `).join('')}
-                </div>
-                <div style="margin-top: 30px; padding: 20px; background: #f8fafc; border-radius: 10px;">
-                    <h3>Режим работы:</h3>
-                    <p>${isTelegram ? '✅ Режим Telegram: данные будут загружены из бота' : '🌐 Режим браузера: используются тестовые данные'}</p>
-                    <p>Товаров в базе: ${state.products.length}</p>
-                </div>
-            `;
-
-            document.getElementById('mainContent').innerHTML = content;
-        }
-
-        function selectCategory(categorySlug) {
-            const category = state.categories.find(c => c.slug === categorySlug);
-            const categoryProducts = state.products.filter(p => p.category === categorySlug);
-
-            const content = `
-                <button onclick="loadCategories()" style="background: #e2e8f0; border: none; padding: 10px 15px; border-radius: 5px; margin-bottom: 20px; cursor: pointer;">
-                    ← Назад
-                </button>
-                <h2>${category?.name || 'Категория'}</h2>
-                <p>${category?.description || ''}</p>
-
-                ${categoryProducts.length > 0 ? `
-                    <div style="margin-top: 20px;">
-                        <h3>Товары (${categoryProducts.length}):</h3>
-                        ${categoryProducts.map(product => `
-                            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin: 10px 0; border: 1px solid #e2e8f0;">
-                                <h4>${product.name}</h4>
-                                <p><strong>Бренд:</strong> ${product.brand}</p>
-                                <p><strong>Цена:</strong> ${product.price.toLocaleString()}₽</p>
-                                <p><strong>Рейтинг:</strong> ${'⭐'.repeat(Math.floor(product.rating))} ${product.rating}/5</p>
-                                <p><small>${product.specs}</small></p>
-                            </div>
-                        `).join('')}
-                    </div>
-                ` : `
-                    <div style="text-align: center; padding: 40px; color: #64748b;">
-                        <p>Товаров в этой категории пока нет</p>
-                    </div>
-                `}
-            `;
-
-            document.getElementById('mainContent').innerHTML = content;
-        }
-
-        function showMessage(text, type = 'info') {
-            const container = document.getElementById('messageContainer');
-            const message = document.createElement('div');
-            message.className = type === 'error' ? 'error' : 'success';
-            message.innerHTML = text;
-            container.innerHTML = '';
-            container.appendChild(message);
-
-            setTimeout(() => {
-                message.remove();
-            }, 5000);
-        }
-
-        function sendDataToBot(action, data = {}) {
-            if (isTelegram && tg) {
-                try {
-                    const messageData = JSON.stringify({ action, ...data });
-                    tg.sendData(messageData);
-                    console.log(`📤 Отправлено в бот: ${action}`);
-                } catch (error) {
-                    console.error('Ошибка отправки в бот:', error);
-                }
-            }
-        }
-
-        // Для отладки
-        window.showTestAlert = function() {
-            alert("JavaScript работает!");
-        };
     </script>
 </body>
 </html>
