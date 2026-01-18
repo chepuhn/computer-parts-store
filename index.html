@@ -2,48 +2,152 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Магазин - Тест</title>
+    <title>Магазин компьютерных комплектующих</title>
+    <!-- Стили прямо в HTML -->
     <style>
-        body { font-family: Arial; padding: 20px; }
-        .loading { color: blue; font-size: 20px; }
-        .loaded { color: green; font-size: 24px; font-weight: bold; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 { color: #2563eb; margin-bottom: 20px; }
+        .status {
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-size: 18px;
+        }
+        .loading { background: #fef3c7; color: #92400e; }
+        .success { background: #d1fae5; color: #065f46; }
+        .error { background: #fee2e2; color: #dc2626; }
+        .btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            transition: 0.3s;
+        }
+        .btn:hover { background: #1d4ed8; transform: scale(1.05); }
+        .category {
+            background: #f8fafc;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .category:hover { border-color: #2563eb; background: #eff6ff; }
     </style>
 </head>
 <body>
-    <h1>🖥️ Тест магазина</h1>
-    
-    <div id="status" class="loading">⏳ Загрузка...</div>
-    
-    <div id="content" style="margin-top: 20px;"></div>
-    
+    <div class="container">
+        <h1>🖥️ Магазин компьютерных комплектующих</h1>
+        <p>Тестовая версия интерфейса</p>
+        
+        <div id="status" class="status loading">
+            ⏳ Инициализация системы...
+        </div>
+        
+        <div id="categories" style="display: none;">
+            <h2>Выберите категорию:</h2>
+            <div class="category" onclick="selectCategory('cpu')">⚡ Процессоры</div>
+            <div class="category" onclick="selectCategory('gpu')">🎮 Видеокарты</div>
+            <div class="category" onclick="selectCategory('ram')">💾 Оперативная память</div>
+        </div>
+        
+        <div id="products" style="display: none; margin-top: 30px;"></div>
+        
+        <div style="margin-top: 30px;">
+            <button class="btn" onclick="checkTelegram()">🔍 Проверить Telegram WebApp</button>
+            <button class="btn" onclick="loadTestData()">📥 Загрузить тестовые данные</button>
+        </div>
+        
+        <div id="debug" style="margin-top: 30px; padding: 15px; background: #f1f5f9; border-radius: 10px; text-align: left; font-size: 14px;"></div>
+    </div>
+
+    <!-- JavaScript прямо в HTML -->
     <script>
-        console.log("🚀 Скрипт начал выполнение!");
+        // Отладочная информация
+        const debug = document.getElementById('debug');
+        debug.innerHTML = '<strong>Отладка:</strong><br>';
         
-        // Через 2 секунды меняем статус
-        setTimeout(function() {
-            document.getElementById('status').className = 'loaded';
-            document.getElementById('status').innerHTML = '✅ JavaScript работает!';
+        // Шаг 1: Проверяем загрузку
+        debug.innerHTML += '1. Страница загружается...<br>';
+        
+        // Шаг 2: Инициализация
+        setTimeout(() => {
+            document.getElementById('status').className = 'status success';
+            document.getElementById('status').innerHTML = '✅ Система инициализирована!';
+            debug.innerHTML += '2. JavaScript работает корректно<br>';
             
-            document.getElementById('content').innerHTML = 
-                '<h3>Категории товаров:</h3>' +
-                '<ul>' +
-                '<li>⚡ Процессоры</li>' +
-                '<li>🎮 Видеокарты</li>' +
-                '<li>💾 Оперативная память</li>' +
-                '</ul>' +
-                '<button onclick="showMore()">Показать больше</button>';
-                
-            console.log("✅ Контент загружен!");
-        }, 2000);
+            // Показываем категории
+            document.getElementById('categories').style.display = 'block';
+            debug.innerHTML += '3. Категории отображены<br>';
+        }, 1500);
         
-        function showMore() {
-            alert('✅ Кнопка работает! Все системы в норме.');
+        // Функции
+        function checkTelegram() {
+            if (window.Telegram?.WebApp) {
+                alert('✅ Telegram WebApp обнаружен!\nБот может отправлять данные.');
+                debug.innerHTML += '4. Telegram WebApp: ДА<br>';
+            } else {
+                alert('ℹ️ Открыто в браузере.\nИспользуйте тестовые данные.');
+                debug.innerHTML += '4. Telegram WebApp: НЕТ (браузер)<br>';
+            }
         }
         
-        // Проверка при загрузке
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("✅ DOM загружен!");
+        function loadTestData() {
+            const products = [
+                { name: 'AMD Ryzen 5 7600X', price: '24 999₽', category: 'cpu' },
+                { name: 'ASUS RTX 4060 Ti', price: '48 990₽', category: 'gpu' },
+                { name: 'Kingston Fury 32GB', price: '7 850₽', category: 'ram' }
+            ];
+            
+            let html = '<h3>Тестовые товары:</h3>';
+            products.forEach(p => {
+                html += `<div class="category">${p.name} - ${p.price}</div>`;
+            });
+            
+            document.getElementById('products').innerHTML = html;
+            document.getElementById('products').style.display = 'block';
+            debug.innerHTML += '5. Тестовые данные загружены<br>';
+        }
+        
+        function selectCategory(cat) {
+            alert(`Выбрана категория: ${cat}\nВ реальном приложении здесь будут товары.`);
+            debug.innerHTML += `6. Выбрана категория: ${cat}<br>`;
+            loadTestData();
+        }
+        
+        // Автоматическая проверка при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            debug.innerHTML += '0. DOM полностью загружен<br>';
         });
+        
+        // Проверка ошибок
+        window.onerror = function(msg, url, line) {
+            debug.innerHTML += `<span style="color: red;">ОШИБКА: ${msg} (строка ${line})</span><br>`;
+            return true;
+        };
     </script>
 </body>
 </html>
