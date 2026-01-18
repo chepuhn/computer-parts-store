@@ -204,10 +204,13 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             transition: all 0.3s;
             cursor: pointer;
+            border: 2px solid transparent;
         }
         
         .category-card:hover {
             transform: scale(1.05);
+            border-color: #667eea;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
         }
         
         .category-icon {
@@ -483,19 +486,40 @@
                 price: 8000, 
                 category: "Охлаждение",
                 description: "360mm, LCD дисплей"
+            },
+            { 
+                id: 9, 
+                name: "Видеокарта NVIDIA RTX 4070", 
+                price: 80000, 
+                category: "Видеокарты",
+                description: "12GB GDDR6X, DLSS 3"
+            },
+            { 
+                id: 10, 
+                name: "Процессор Intel Core i7-13700K", 
+                price: 45000, 
+                category: "Процессоры",
+                description: "16 ядер, 24 потока, 5.4 GHz"
+            },
+            { 
+                id: 11, 
+                name: "Блок питания Corsair RM850x", 
+                price: 11000, 
+                category: "Блоки питания",
+                description: "80+ Gold, полностью модульный"
             }
         ];
 
         // ========== КАТЕГОРИИ ==========
         const categories = [
-            { id: 1, name: "Видеокарты", icon: "🎮", count: 12 },
-            { id: 2, name: "Процессоры", icon: "⚡", count: 8 },
-            { id: 3, name: "Материнские платы", icon: "🔌", count: 15 },
-            { id: 4, name: "Оперативная память", icon: "🧠", count: 25 },
-            { id: 5, name: "SSD накопители", icon: "💾", count: 20 },
-            { id: 6, name: "Блоки питания", icon: "🔋", count: 18 },
-            { id: 7, name: "Корпуса", icon: "📦", count: 22 },
-            { id: 8, name: "Охлаждение", icon: "❄️", count: 30 }
+            { id: 1, name: "Видеокарты", icon: "🎮", count: 2 },
+            { id: 2, name: "Процессоры", icon: "⚡", count: 2 },
+            { id: 3, name: "Материнские платы", icon: "🔌", count: 1 },
+            { id: 4, name: "Память", icon: "🧠", count: 1 },
+            { id: 5, name: "Накопители", icon: "💾", count: 1 },
+            { id: 6, name: "Блоки питания", icon: "🔋", count: 2 },
+            { id: 7, name: "Корпуса", icon: "📦", count: 1 },
+            { id: 8, name: "Охлаждение", icon: "❄️", count: 1 }
         ];
 
         // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
@@ -631,7 +655,7 @@
             let categoriesHTML = '';
             categories.forEach(category => {
                 categoriesHTML += `
-                    <div class="category-card" onclick="filterByCategory('${category.name}')">
+                    <div class="category-card" onclick="selectCategory('${category.name}')">
                         <span class="category-icon">${category.icon}</span>
                         <h3 class="category-name">${category.name}</h3>
                         <p>${category.count} товаров</p>
@@ -643,20 +667,65 @@
             console.log('✅ Загружено категорий:', categories.length);
         }
 
-        // ========== ФИЛЬТРАЦИЯ ПО КАТЕГОРИИ ==========
-        function filterByCategory(categoryName) {
-            console.log('🔍 Фильтруем по категории:', categoryName);
+        // ========== ВЫБОР КАТЕГОРИИ ==========
+        function selectCategory(categoryName) {
+            console.log('🎯 Выбрана категория:', categoryName);
             
             // Переходим на страницу товаров
             loadPage('home');
             
-            // Устанавливаем значение поиска
+            // Устанавливаем значение поиска и сразу фильтруем
             document.getElementById('search-input').value = categoryName;
             
             // Загружаем отфильтрованные товары
-            loadProducts();
+            loadFilteredProductsByCategory(categoryName);
             
             showNotification(`Показаны товары из категории "${categoryName}"`);
+        }
+
+        // ========== ФИЛЬТРАЦИЯ ТОВАРОВ ПО КАТЕГОРИИ ==========
+        function loadFilteredProductsByCategory(categoryName) {
+            console.log('🔍 Фильтруем товары по категории:', categoryName);
+            const catalog = document.getElementById('catalog');
+            
+            // Фильтруем товары по категории
+            const filteredProducts = products.filter(p => 
+                p.category.toLowerCase() === categoryName.toLowerCase()
+            );
+            
+            // Если нет товаров в категории
+            if (filteredProducts.length === 0) {
+                catalog.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">📦</div>
+                        <h3 style="margin-bottom: 10px;">В категории "${categoryName}" пока нет товаров</h3>
+                        <button class="add-to-cart-btn" onclick="loadPage('home')" 
+                                style="display: inline-block; width: auto; padding: 10px 20px; margin-top: 15px;">
+                            Вернуться к каталогу
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Генерируем HTML для отфильтрованных товаров
+            let productsHTML = '';
+            filteredProducts.forEach(product => {
+                productsHTML += `
+                    <div class="product-card" data-product-id="${product.id}">
+                        <div class="product-category">${product.category}</div>
+                        <h3 class="product-name">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-price">${product.price.toLocaleString()} ₽</div>
+                        <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
+                            🛒 Добавить в корзину
+                        </button>
+                    </div>
+                `;
+            });
+            
+            catalog.innerHTML = productsHTML;
+            console.log('✅ Найдено товаров в категории:', filteredProducts.length);
         }
 
         // ========== ДОБАВЛЕНИЕ В КОРЗИНУ ==========
@@ -700,7 +769,8 @@
                         <div class="empty-cart-icon">🛒</div>
                         <h3 style="margin-bottom: 10px;">Корзина пуста</h3>
                         <p style="margin-bottom: 20px;">Добавьте товары из каталога</p>
-                        <button class="add-to-cart-btn" onclick="loadPage('home')">
+                        <button class="add-to-cart-btn" onclick="loadPage('home')" 
+                                style="display: inline-block; width: auto; padding: 12px 24px;">
                             Перейти в каталог
                         </button>
                     </div>
