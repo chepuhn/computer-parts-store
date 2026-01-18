@@ -429,97 +429,256 @@
     </main>
 
     <script>
-        // ========== ДАННЫЕ ТОВАРОВ ==========
+        // ========== ДАННЫЕ ТОВАРОВ (32 ТОВАРА) ==========
         const products = [
+            // Видеокарты (8 товаров)
             { 
                 id: 1, 
-                name: "Видеокарта NVIDIA RTX 4090", 
-                price: 150000, 
+                name: "NVIDIA GeForce RTX 4090", 
+                price: 185000, 
                 category: "Видеокарты",
-                description: "24GB GDDR6X, для игр в 8K"
+                description: "24GB GDDR6X, Ada Lovelace, DLSS 3"
             },
             { 
                 id: 2, 
-                name: "Процессор AMD Ryzen 9 7950X", 
-                price: 70000, 
-                category: "Процессоры",
-                description: "16 ядер, 32 потока, 5.7 GHz"
+                name: "NVIDIA GeForce RTX 4080 SUPER", 
+                price: 125000, 
+                category: "Видеокарты",
+                description: "16GB GDDR6X, 4K гейминг"
             },
             { 
                 id: 3, 
-                name: "Оперативная память Corsair 64GB DDR5", 
-                price: 25000, 
-                category: "Память",
-                description: "DDR5 6000MHz, 4 модуля по 16GB"
+                name: "AMD Radeon RX 7900 XTX", 
+                price: 110000, 
+                category: "Видеокарты",
+                description: "24GB GDDR6, FSR 3, Ray Tracing"
             },
             { 
                 id: 4, 
-                name: "SSD Samsung 990 PRO 4TB", 
-                price: 18000, 
-                category: "Накопители",
-                description: "PCIe 4.0, скорость до 7450 MB/s"
+                name: "NVIDIA GeForce RTX 4070 Ti", 
+                price: 85000, 
+                category: "Видеокарты",
+                description: "12GB GDDR6X, 2K ультра"
             },
             { 
                 id: 5, 
-                name: "Материнская плата ASUS ROG Strix", 
-                price: 35000, 
-                category: "Материнские платы",
-                description: "Socket AM5, Wi-Fi 6E"
+                name: "AMD Radeon RX 7800 XT", 
+                price: 65000, 
+                category: "Видеокарты",
+                description: "16GB GDDR6, 1440p гейминг"
             },
             { 
                 id: 6, 
-                name: "Блок питания Seasonic 1000W", 
-                price: 15000, 
-                category: "Блоки питания",
-                description: "80+ Platinum, 12 лет гарантии"
+                name: "NVIDIA GeForce RTX 4060 Ti", 
+                price: 48000, 
+                category: "Видеокарты",
+                description: "8GB GDDR6, 1080p максимум"
             },
             { 
                 id: 7, 
-                name: "Корпус Lian Li O11 Dynamic", 
-                price: 12000, 
-                category: "Корпуса",
-                description: "E-ATX, с боковым стеклом"
+                name: "Intel Arc A770", 
+                price: 35000, 
+                category: "Видеокарты",
+                description: "16GB GDDR6, XeSS, AV1 кодирование"
             },
             { 
                 id: 8, 
-                name: "СЖО NZXT Kraken Z73", 
-                price: 8000, 
-                category: "Охлаждение",
-                description: "360mm, LCD дисплей"
+                name: "NVIDIA GeForce RTX 3050", 
+                price: 28000, 
+                category: "Видеокарты",
+                description: "8GB GDDR6, для офиса и учебы"
             },
+            
+            // Процессоры (6 товаров)
             { 
                 id: 9, 
-                name: "Видеокарта NVIDIA RTX 4070", 
-                price: 80000, 
-                category: "Видеокарты",
-                description: "12GB GDDR6X, DLSS 3"
+                name: "AMD Ryzen 9 7950X3D", 
+                price: 85000, 
+                category: "Процессоры",
+                description: "16 ядер, 3D V-Cache, до 5.7 GHz"
             },
             { 
                 id: 10, 
-                name: "Процессор Intel Core i7-13700K", 
-                price: 45000, 
+                name: "Intel Core i9-14900K", 
+                price: 75000, 
                 category: "Процессоры",
-                description: "16 ядер, 24 потока, 5.4 GHz"
+                description: "24 ядра, до 6.0 GHz, Raptor Lake"
             },
             { 
                 id: 11, 
-                name: "Блок питания Corsair RM850x", 
-                price: 11000, 
+                name: "AMD Ryzen 7 7800X3D", 
+                price: 45000, 
+                category: "Процессоры",
+                description: "8 ядер, лучший для игр"
+            },
+            { 
+                id: 12, 
+                name: "Intel Core i7-14700K", 
+                price: 42000, 
+                category: "Процессоры",
+                description: "20 ядер, 28 потоков"
+            },
+            { 
+                id: 13, 
+                name: "AMD Ryzen 5 7600X", 
+                price: 28000, 
+                category: "Процессоры",
+                description: "6 ядер, AM5, DDR5"
+            },
+            { 
+                id: 14, 
+                name: "Intel Core i5-14600K", 
+                price: 32000, 
+                category: "Процессоры",
+                description: "14 ядер, отличная цена/качество"
+            },
+            
+            // Материнские платы (4 товара)
+            { 
+                id: 15, 
+                name: "ASUS ROG Maximus Z790 Hero", 
+                price: 65000, 
+                category: "Материнские платы",
+                description: "Z790, Wi-Fi 7, Thunderbolt 4"
+            },
+            { 
+                id: 16, 
+                name: "GIGABYTE X670E AORUS Master", 
+                price: 58000, 
+                category: "Материнские платы",
+                description: "AM5, PCIe 5.0, 10Gb Ethernet"
+            },
+            { 
+                id: 17, 
+                name: "MSI MPG B650 Carbon WiFi", 
+                price: 32000, 
+                category: "Материнские платы",
+                description: "AM5, DDR5, 2.5Gb LAN"
+            },
+            { 
+                id: 18, 
+                name: "ASRock B760 Steel Legend", 
+                price: 18000, 
+                category: "Материнские платы",
+                description: "LGA1700, ARGB, хороший охлаждение"
+            },
+            
+            // Оперативная память (4 товара)
+            { 
+                id: 19, 
+                name: "G.SKILL Trident Z5 RGB 64GB", 
+                price: 32000, 
+                category: "Память",
+                description: "DDR5-6400, CL32, RGB подсветка"
+            },
+            { 
+                id: 20, 
+                name: "Corsair Dominator Platinum 32GB", 
+                price: 18000, 
+                category: "Память",
+                description: "DDR5-6000, CL30, алюминиевый радиатор"
+            },
+            { 
+                id: 21, 
+                name: "Kingston FURY Beast 32GB", 
+                price: 12000, 
+                category: "Память",
+                description: "DDR4-3600, CL18, для игр"
+            },
+            { 
+                id: 22, 
+                name: "Team Group T-Force Delta RGB 16GB", 
+                price: 7500, 
+                category: "Память",
+                description: "DDR4-3200, CL16, адресная RGB"
+            },
+            
+            // Накопители (4 товара)
+            { 
+                id: 23, 
+                name: "Samsung 990 PRO 4TB", 
+                price: 42000, 
+                category: "Накопители",
+                description: "PCIe 4.0, 7450/6900 MB/s"
+            },
+            { 
+                id: 24, 
+                name: "WD Black SN850X 2TB", 
+                price: 18500, 
+                category: "Накопители",
+                description: "PCIe 4.0, 7300/6600 MB/s"
+            },
+            { 
+                id: 25, 
+                name: "Crucial P5 Plus 1TB", 
+                price: 8500, 
+                category: "Накопители",
+                description: "PCIe 4.0, для игр и ОС"
+            },
+            { 
+                id: 26, 
+                name: "Kingston NV2 2TB", 
+                price: 9500, 
+                category: "Накопители",
+                description: "PCIe 4.0, бюджетный вариант"
+            },
+            
+            // Блоки питания (3 товара)
+            { 
+                id: 27, 
+                name: "Seasonic PRIME TX-1000", 
+                price: 28000, 
                 category: "Блоки питания",
-                description: "80+ Gold, полностью модульный"
+                description: "1000W, 80+ Titanium, 12 лет гарантии"
+            },
+            { 
+                id: 28, 
+                name: "Corsair RM1000x SHIFT", 
+                price: 22000, 
+                category: "Блоки питания",
+                description: "1000W, 80+ Gold, модульный"
+            },
+            { 
+                id: 29, 
+                name: "be quiet! Straight Power 11 850W", 
+                price: 15000, 
+                category: "Блоки питания",
+                description: "850W, Platinum, тихий"
+            },
+            
+            // Корпуса (3 товара)
+            { 
+                id: 30, 
+                name: "Lian Li O11 Dynamic EVO", 
+                price: 18000, 
+                category: "Корпуса",
+                description: "Dual Chamber, стеклянные панели"
+            },
+            { 
+                id: 31, 
+                name: "Fractal Design North", 
+                price: 14500, 
+                category: "Корпуса",
+                description: "Деревянная отделка, mesh фронт"
+            },
+            { 
+                id: 32, 
+                name: "NZXT H9 Flow", 
+                price: 16500, 
+                category: "Корпуса",
+                description: "Панорамное стекло, отличная вентиляция"
             }
         ];
 
         // ========== КАТЕГОРИИ ==========
         const categories = [
-            { id: 1, name: "Видеокарты", icon: "🎮", count: 2 },
-            { id: 2, name: "Процессоры", icon: "⚡", count: 2 },
-            { id: 3, name: "Материнские платы", icon: "🔌", count: 1 },
-            { id: 4, name: "Память", icon: "🧠", count: 1 },
-            { id: 5, name: "Накопители", icon: "💾", count: 1 },
-            { id: 6, name: "Блоки питания", icon: "🔋", count: 2 },
-            { id: 7, name: "Корпуса", icon: "📦", count: 1 },
-            { id: 8, name: "Охлаждение", icon: "❄️", count: 1 }
+            { id: 1, name: "Видеокарты", icon: "🎮", count: 8 },
+            { id: 2, name: "Процессоры", icon: "⚡", count: 6 },
+            { id: 3, name: "Материнские платы", icon: "🔌", count: 4 },
+            { id: 4, name: "Память", icon: "🧠", count: 4 },
+            { id: 5, name: "Накопители", icon: "💾", count: 4 },
+            { id: 6, name: "Блоки питания", icon: "🔋", count: 3 },
+            { id: 7, name: "Корпуса", icon: "📦", count: 3 }
         ];
 
         // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
@@ -529,6 +688,7 @@
         // ========== ИНИЦИАЛИЗАЦИЯ ==========
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Приложение запущено!');
+            console.log('📊 Всего товаров в каталоге:', products.length);
             
             // Загружаем начальную страницу
             loadPage('home');
@@ -619,9 +779,13 @@
             if (filteredProducts.length === 0) {
                 catalog.innerHTML = `
                     <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
-                        <div style="font-size: 48px; margin-bottom: 20px;">😕</div>
+                        <div style="font-size: 48px; margin-bottom: 20px;">🔍</div>
                         <h3 style="margin-bottom: 10px;">Товары не найдены</h3>
-                        <p>Попробуйте другой поисковый запрос</p>
+                        <p>Попробуйте изменить поисковый запрос</p>
+                        <button class="add-to-cart-btn" onclick="loadPage('home')" 
+                                style="display: inline-block; width: auto; padding: 12px 24px; margin-top: 20px;">
+                            Показать все товары
+                        </button>
                     </div>
                 `;
                 return;
@@ -643,6 +807,17 @@
                 `;
             });
             
+            // Добавляем счетчик найденных товаров
+            if (searchTerm) {
+                productsHTML = `
+                    <div style="grid-column: 1/-1; margin-bottom: 20px; padding: 15px; background: #e3f2fd; border-radius: 10px;">
+                        <strong>Найдено товаров: ${filteredProducts.length}</strong>
+                        ${searchTerm ? ` по запросу: "${searchTerm}"` : ''}
+                    </div>
+                    ${productsHTML}
+                `;
+            }
+            
             catalog.innerHTML = productsHTML;
             console.log('✅ Загружено товаров:', filteredProducts.length);
         }
@@ -659,6 +834,10 @@
                         <span class="category-icon">${category.icon}</span>
                         <h3 class="category-name">${category.name}</h3>
                         <p>${category.count} товаров</p>
+                        <button class="add-to-cart-btn" onclick="selectCategory('${category.name}')" 
+                                style="margin-top: 15px; background: #4CAF50;">
+                            Смотреть товары
+                        </button>
                     </div>
                 `;
             });
@@ -674,7 +853,7 @@
             // Переходим на страницу товаров
             loadPage('home');
             
-            // Устанавливаем значение поиска и сразу фильтруем
+            // Устанавливаем значение поиска
             document.getElementById('search-input').value = categoryName;
             
             // Загружаем отфильтрованные товары
@@ -724,6 +903,19 @@
                 `;
             });
             
+            // Добавляем заголовок категории
+            productsHTML = `
+                <div style="grid-column: 1/-1; margin-bottom: 20px; padding: 20px; background: linear-gradient(135deg, #667eea20, #764ba220); border-radius: 15px;">
+                    <h2 style="margin: 0; color: #667eea;">Категория: ${categoryName}</h2>
+                    <p style="margin: 10px 0 0 0; color: #666;">Товаров в категории: ${filteredProducts.length}</p>
+                    <button class="add-to-cart-btn" onclick="document.getElementById('search-input').value = ''; loadProducts();" 
+                            style="display: inline-block; width: auto; padding: 10px 20px; margin-top: 10px; background: #ff9800;">
+                        Показать все товары
+                    </button>
+                </div>
+                ${productsHTML}
+            `;
+            
             catalog.innerHTML = productsHTML;
             console.log('✅ Найдено товаров в категории:', filteredProducts.length);
         }
@@ -756,6 +948,24 @@
             saveCart();
             updateCartCounter();
             showNotification(`✅ "${product.name}" добавлен в корзину!`);
+            
+            // Показываем анимацию добавления
+            animateAddToCart(productId);
+        }
+
+        // ========== АНИМАЦИЯ ДОБАВЛЕНИЯ В КОРЗИНУ ==========
+        function animateAddToCart(productId) {
+            const button = document.querySelector(`.add-to-cart-btn[onclick*="${productId}"]`);
+            if (!button) return;
+            
+            const originalText = button.innerHTML;
+            button.innerHTML = '✅ Добавлено!';
+            button.style.background = '#4CAF50';
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            }, 1500);
         }
 
         // ========== ЗАГРУЗКА КОРЗИНЫ ==========
@@ -814,6 +1024,12 @@
                 <button class="checkout-btn" onclick="checkout()">
                     💳 Оформить заказ
                 </button>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="add-to-cart-btn" onclick="loadPage('home')" 
+                            style="display: inline-block; width: auto; padding: 12px 24px; background: #667eea;">
+                        Продолжить покупки
+                    </button>
+                </div>
             `;
             
             cartItems.innerHTML = cartHTML;
@@ -829,6 +1045,9 @@
             
             if (item.quantity <= 0) {
                 cart = cart.filter(item => item.id !== productId);
+                showNotification('🗑️ Товар удален из корзины');
+            } else {
+                showNotification(`🔄 Количество изменено: ${item.name} - ${item.quantity} шт.`);
             }
             
             saveCart();
@@ -838,11 +1057,14 @@
 
         // ========== УДАЛЕНИЕ ИЗ КОРЗИНЫ ==========
         function removeFromCart(productId) {
+            const item = cart.find(item => item.id === productId);
+            if (!item) return;
+            
             cart = cart.filter(item => item.id !== productId);
             saveCart();
             updateCartCounter();
             loadCart();
-            showNotification('🗑️ Товар удален из корзины');
+            showNotification(`🗑️ "${item.name}" удален из корзины`);
         }
 
         // ========== ОФОРМЛЕНИЕ ЗАКАЗА ==========
@@ -853,13 +1075,28 @@
             }
             
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
             
-            if (confirm(`Оформить заказ на сумму ${total.toLocaleString()} ₽?`)) {
+            if (confirm(`Оформить заказ на ${itemCount} товаров на сумму ${total.toLocaleString()} ₽?`)) {
+                // Сохраняем заказ в историю
+                const order = {
+                    id: Date.now(),
+                    date: new Date().toLocaleString(),
+                    items: [...cart],
+                    total: total,
+                    status: 'Оформлен'
+                };
+                
+                // Сохраняем историю заказов
+                let orders = JSON.parse(localStorage.getItem('orders')) || [];
+                orders.push(order);
+                localStorage.setItem('orders', JSON.stringify(orders));
+                
                 showNotification('🎉 Заказ оформлен! Спасибо за покупку!');
                 cart = [];
                 saveCart();
                 updateCartCounter();
-                loadPage('home');
+                loadPage('orders');
             }
         }
 
@@ -893,6 +1130,8 @@
                 z-index: 1000;
                 animation: slideIn 0.3s ease;
                 font-weight: bold;
+                max-width: 400px;
+                word-wrap: break-word;
             `;
             
             document.body.appendChild(notify);
