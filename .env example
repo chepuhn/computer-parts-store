@@ -1,0 +1,8 @@
+# Токен вашего Telegram бота от @BotFather
+BOT_TOKEN=8564157907:AAGpbALZpb-dMkL-9mIpnnccK2tk6xF4-_M
+
+# URL вашего веб-приложения (GitHub Pages)
+WEB_APP_URL=https://chepuhn.github.io/computer-parts-store/
+
+# Опционально: ID администратора для уведомлений
+# ADMIN_CHAT_ID=ваш_id_телеграм
